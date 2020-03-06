@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
+import useTodoState from './hooks/useTodoState';
 import TodoList from './TodoList';
 import TodoForm from './TodoForm';
 import Typography from '@material-ui/core/Typography';
@@ -6,45 +7,14 @@ import Paper from '@material-ui/core/Paper';
 import Toolbar from '@material-ui/core/Toolbar';
 import AppBar from '@material-ui/core/AppBar';
 import Grid from '@material-ui/core/Grid';
-import uuid from 'uuid/v4'; 
+
 
 // import Typography from '@material-ui/core/Typography';
 
 function TodoApp() {
-    const initialTodos = JSON.parse(window.localStorage.getItem('todos') || '[]');
-    // const initialTodos = [
-    //     { id: 1, task: "clean fish", completed: false },
-    //     { id: 2, task: "walk dog", completed: true },
-    //     { id: 3, task: "wash the car", completed: false },
-    // ];
-    const [todos, setTodos] = useState(initialTodos);
-
-    // useEffect to save to local storage
-    useEffect(() => {
-        window.localStorage.setItem('todos', JSON.stringify(todos));
-    }, [todos]);
+    const initialTodos = [{ id: 1, task: "pet a monkey", completed: false }];
+    const {todos, addTodo, removeTodo, toggleTodo, editTodo } = useTodoState(initialTodos);
     
-    const addTodo = newTodoText => {
-        setTodos([...todos, { id: uuid(), task: newTodoText, completed: false }]);
-    };
-    const removeTodo = todoId => {
-        //filter out removed todo
-        const updatedTodos = todos.filter(todos => todos.id !== todoId);
-        //call setTodos with new array
-        setTodos(updatedTodos);
-    }
-    const toggleTodo = todoId => {
-        const updatedTodos = todos.map(todo => 
-            todo.id === todoId ? {...todo, completed: !todo.completed} : todo
-            );
-            setTodos(updatedTodos);
-    }
-    const editTodo = (todoId, newTask) => {
-        const updatedTodos = todos.map(todo => 
-            todo.id === todoId ? {...todo, task: newTask}  : todo
-            );
-            setTodos(updatedTodos);
-        };
     return (
         <Paper 
             style={{
